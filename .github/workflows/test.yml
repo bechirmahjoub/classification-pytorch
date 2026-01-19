@@ -1,4 +1,4 @@
-name: CI workflow
+name : CI workflow
 
 on:
   push:
@@ -10,18 +10,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pull-requests: write
-      repository-projects: write
-      id-token: write
     steps:
       # Checkout the repository code
       - name: Checkout repository
         uses: actions/checkout@v2
-
-      - name: Install uv
-        uses: astral-sh/setup-uv@v2
 
       # Set up Python environment
       - name: Set up Python
@@ -35,23 +27,8 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt 
 
-      # DVC
-      - name: Create project4-442608-5ffc36a5828f.json
-        env:
-          GDRIVE_CREDENTIALS_DATA: ${{ secrets.CREDENTIAL }}
+      # Run CNN Ship Filter Inference
+      - name: Run tests
         run: |
-          echo $GDRIVE_CREDENTIALS_DATA > project4-442608-5ffc36a5828f.json
-
-      - name: Modify DVC Remote
-        run: |
-          uv run dvc remote modify --local gdrive_remote gdrive_service_account_json_file_path project4-442608-5ffc36a5828f.json
-
-      - name: DVC Pull Data
-        run: |
-          uv run dvc pull -v
-
-      - name: Run model tests
-        run: |
-          uv run python main.py --mode test \
-            --data_path data/test \
-            --model_path models/cnn_resnet18_freeze_backbone_False.pth
+          mkdir -p /home/runner/work/classification-pytorch/classification-pytorch/plots
+          python3 main.py --mode test --data_path ./data/test/ --model_path ./models/cnn_resnet18_freeze_backbone_False.pth
