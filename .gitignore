@@ -1,6 +1,18 @@
-/data
-.dvc/config.local
-.dvc/tmp
+# DVC
 .dvc/cache
-/models
+.dvc/tmp
+*.dvc/tmp
+*.dvc/cache
+
+# Data and models (large artifacts)
+data/
+models/
+
+# Secrets
 secrets/
+*.json
+
+# Python
+__pycache__/
+*.pyc
+.venv/
