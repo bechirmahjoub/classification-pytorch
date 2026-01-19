@@ -3,3 +3,4 @@
 .dvc/tmp
 .dvc/cache
 /models
+secrets/
